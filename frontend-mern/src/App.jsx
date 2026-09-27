@@ -62,6 +62,7 @@ function Sidebar(props) {
   const onSetMaxPrice = props.onSetMaxPrice;
   const filtersActive = props.filtersActive;
   const onReset = props.onReset;
+  const highestPrice = props.highestPrice;
 
   return (
     <aside className="qc-sidebar">
@@ -127,7 +128,7 @@ function Sidebar(props) {
         type="range"
         className="qc-slider"
         min={0}
-        max={HIGHEST_PRICE}
+        max={highestPrice}
         step={50}
         value={maxPrice}
         onChange={function (e) { onSetMaxPrice(Number(e.target.value)); }}
@@ -476,41 +477,42 @@ export default function App() {
       )}
 
       {!loading && !fetchError && (
-      <div className="qc-layout">
-        <Sidebar
-          selectedCategories={selectedCategories}
-          onToggleCategory={function (cat) { toggleFromList(cat, selectedCategories, setSelectedCategories); }}
-          selectedBrands={selectedBrands}
-          onToggleBrand={function (brand) { toggleFromList(brand, selectedBrands, setSelectedBrands); }}
-          minRating={minRating}
-          onSetMinRating={setMinRating}
-          maxPrice={maxPrice}
-          onSetMaxPrice={setMaxPrice}
-          filtersActive={filtersActive}
-          onReset={resetFilters}
-        />
-
-        <main className="qc-main">
-          <div className="qc-toolbar">
-            {/* Product count display */}
-            <p className="qc-count">{filteredProducts.length} of {products.length} products</p>
-            <select className="qc-select" value={sortBy} onChange={function (e) { setSortBy(e.target.value); }}>
-              {SORT_OPTIONS.map(function (opt) {
-                return <option key={opt.value} value={opt.value}>{opt.label}</option>;
-              })}
-            </select>
-          </div>
-
-          <ProductGrid
-            products={filteredProducts}
-            cart={cart}
-            onAddToCart={addToCart}
-            onDecrement={decrementCart}
-            showAdmin={showAdmin}
-            onDeleteProduct={deleteProduct}
+        <div className="qc-layout">
+          <Sidebar
+            selectedCategories={selectedCategories}
+            onToggleCategory={function (cat) { toggleFromList(cat, selectedCategories, setSelectedCategories); }}
+            selectedBrands={selectedBrands}
+            onToggleBrand={function (brand) { toggleFromList(brand, selectedBrands, setSelectedBrands); }}
+            minRating={minRating}
+            onSetMinRating={setMinRating}
+            maxPrice={maxPrice}
+            onSetMaxPrice={setMaxPrice}
+            filtersActive={filtersActive}
+            onReset={resetFilters}
+            highestPrice={HIGHEST_PRICE}
           />
-        </main>
-      </div>
+
+          <main className="qc-main">
+            <div className="qc-toolbar">
+              {/* Product count display */}
+              <p className="qc-count">{filteredProducts.length} of {products.length} products</p>
+              <select className="qc-select" value={sortBy} onChange={function (e) { setSortBy(e.target.value); }}>
+                {SORT_OPTIONS.map(function (opt) {
+                  return <option key={opt.value} value={opt.value}>{opt.label}</option>;
+                })}
+              </select>
+            </div>
+
+            <ProductGrid
+              products={filteredProducts}
+              cart={cart}
+              onAddToCart={addToCart}
+              onDecrement={decrementCart}
+              showAdmin={showAdmin}
+              onDeleteProduct={deleteProduct}
+            />
+          </main>
+        </div>
       )}
 
       {showCart && <CartDrawer cart={cart} onClose={function () { setShowCart(false); }} onRemove={removeFromCart} />}
